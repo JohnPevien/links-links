@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JMDY Links</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0b', 800: '#121214', 700: '#1a1a1d', 600: '#232328', 500: '#2d2d33' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .cat-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .cat-content.open { max-height: 3000px; transition: max-height 0.5s ease-in; }
+    .chev { transition: transform 0.3s ease; }
+    .chev.open { transform: rotate(180deg); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #121214; }
+    ::-webkit-scrollbar-thumb { background: #2d2d33; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-200 min-h-screen">
+  <header class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-semibold text-white tracking-tight">JMDY Links</h1>
+        <a href="taurus-clothes.html" class="text-sm px-3 py-1.5 rounded-lg bg-dark-700 hover:bg-dark-600 text-gray-300 hover:text-white transition-all">Taurus →</a>
+      </div>
+      <div class="relative">
+        <input type="text" id="search" placeholder="Search..." class="bg-dark-700 border border-dark-500 rounded-lg px-4 py-2 pl-10 w-64 text-sm focus:outline-none focus:border-blue-500 transition-all">
+        <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 py-8"><div class="grid gap-3" id="cats"></div></main>
+
+<script>
+const BASE_URL = "https://tianjin-no1.x.yupoo.com";
+const data = [
+  { name: "Air Force 1", links: [
+    { t: "【G Batch】", h: "/categories/438190?isSubCate=true" },
+    { t: "【GX SDS Batch】", h: "/categories/640376?isSubCate=true" },
+    { t: "【S2 Batch】CPFM", h: "/categories/697885?isSubCate=true" },
+    { t: "【HY Batch】", h: "/categories/480485?isSubCate=true" },
+    { t: "【TOP Batch】", h: "/categories/437705?isSubCate=true" },
+    { t: "【OWF Batch】", h: "/categories/448679?isSubCate=true" },
+    { t: "【XP Batch】", h: "/categories/604329?isSubCate=true" },
+    { t: "【3A Batch】", h: "/categories/477739?isSubCate=true" },
+    { t: "【GX Batch】", h: "/categories/413933?isSubCate=true" },
+    { t: "【89 Batch】", h: "/categories/413937?isSubCate=true" },
+    { t: "【PK Batch】", h: "/categories/471263?isSubCate=true" },
+    { t: "【MAX Batch】", h: "/categories/484699?isSubCate=true" },
+    { t: "【MOK Batch】", h: "/categories/648209?isSubCate=true" },
+    { t: "【TG Batch】", h: "/categories/656820?isSubCate=true" },
+    { t: "【G5 Batch】", h: "/categories/687277?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 1", links: [
+    { t: "【LJR Batch】", h: "/categories/413784?isSubCate=true" },
+    { t: "【DT Batch】Low", h: "/categories/413787?isSubCate=true" },
+    { t: "【FK Batch】", h: "/categories/413804?isSubCate=true" },
+    { t: "【PK 4.0 Batch】", h: "/categories/413795?isSubCate=true" },
+    { t: "【FQ Batch】TS", h: "/categories/706803?isSubCate=true" },
+    { t: "【PK Batch】", h: "/categories/413799?isSubCate=true" },
+    { t: "【DT Batch】MID", h: "/categories/434762?isSubCate=true" },
+    { t: "【DT Batch】Low OG", h: "/categories/434757?isSubCate=true" },
+    { t: "【Y3 Batch】", h: "/categories/413792?isSubCate=true" },
+    { t: "【VT Batch】Low OG", h: "/categories/413793?isSubCate=true" },
+    { t: "【Y3 Batch】Low OG", h: "/categories/413797?isSubCate=true" },
+    { t: "【DF Batch】", h: "/categories/413800?isSubCate=true" },
+    { t: "【OG Batch】", h: "/categories/413802?isSubCate=true" },
+    { t: "【DG Batch】Low OG", h: "/categories/413805?isSubCate=true" },
+    { t: "【DG Batch】", h: "/categories/444676?isSubCate=true" },
+    { t: "【LW Batch】", h: "/categories/468879?isSubCate=true" },
+    { t: "【LJ Batch】", h: "/categories/492856?isSubCate=true" },
+    { t: "【NEW FQ Batch】", h: "/categories/528134?isSubCate=true" },
+    { t: "【GC Batch】Low", h: "/categories/579118?isSubCate=true" },
+    { t: "【DG 2.0 Batch】TS", h: "/categories/709996?isSubCate=true" },
+    { t: "【DG 2.0 Batch】HIGH", h: "/categories/713066?isSubCate=true" },
+    { t: "【FF Batch】TS", h: "/categories/722475?isSubCate=true" },
+    { t: "【XP Batch】", h: "/categories/709298?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 3", links: [
+    { t: "【OG Batch】", h: "/categories/413813?isSubCate=true" },
+    { t: "【LJR Batch】", h: "/categories/502293?isSubCate=true" },
+    { t: "【GX Batch】", h: "/categories/475396?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 4", links: [
+    { t: "【LJR Batch】", h: "/categories/413847?isSubCate=true" },
+    { t: "【KZ 2.0 Batch】", h: "/categories/544017?isSubCate=true" },
+    { t: "【OG Batch】", h: "/categories/413888?isSubCate=true" },
+    { t: "【Y3 Batch】", h: "/categories/413876?isSubCate=true" },
+    { t: "【H12 Batch】", h: "/categories/413880?isSubCate=true" },
+    { t: "【PK Batch】", h: "/categories/413884?isSubCate=true" },
+    { t: "【DF Batch】", h: "/categories/413887?isSubCate=true" },
+    { t: "【X Batch】", h: "/categories/413883?isSubCate=true" },
+    { t: "【XP Batch】", h: "/categories/413878?isSubCate=true" },
+    { t: "【NEW GX Batch】", h: "/categories/413846?isSubCate=true" },
+    { t: "【R1 Batch】", h: "/categories/445955?isSubCate=true" },
+    { t: "【RN Batch】", h: "/categories/647121?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 5", links: [
+    { t: "【Y3 Batch】", h: "/categories/413895?isSubCate=true" },
+    { t: "【LJR Batch】", h: "/categories/436839?isSubCate=true" },
+    { t: "【OG Batch】", h: "/categories/436840?isSubCate=true" },
+    { t: "【5A Batch】", h: "/categories/436851?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 6", links: [
+    { t: "【OG Batch】", h: "/categories/413897?isSubCate=true" },
+    { t: "【LJR Batch】", h: "/categories/413898?isSubCate=true" },
+    { t: "【BG Batch】", h: "/categories/437988?isSubCate=true" },
+    { t: "【DG 2.0 Batch】", h: "/categories/712369?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 10/11/12", links: [
+    { t: "【TK Batch】AJ10", h: "/categories/693221?isSubCate=true" },
+    { t: "【Y3 Batch】AJ11", h: "/categories/413900?isSubCate=true" },
+    { t: "【XP Batch】AJ11", h: "/categories/413902?isSubCate=true" },
+    { t: "【LJR Batch】AJ11", h: "/categories/413904?isSubCate=true" },
+    { t: "【LJR Batch】AJ12", h: "/categories/413906?isSubCate=true" },
+    { t: "【WM Batch】AJ12", h: "/categories/475392?isSubCate=true" },
+    { t: "【DGC Batch】AJ12", h: "/categories/754195?isSubCate=true" }
+  ]},
+  { name: "AIR JORDAN 35", links: [{ t: "【MAX Batch】AJ35", h: "/categories/413956?isSubCate=true" }] },
+  { name: "DUNK", links: [
+    { t: "【M Batch】", h: "/categories/413916?isSubCate=true" },
+    { t: "【TOP Batch】", h: "/categories/413915?isSubCate=true" },
+    { t: "【NEW VT Batch】", h: "/categories/435870?isSubCate=true" },
+    { t: "【VT Batch】", h: "/categories/413911?isSubCate=true" },
+    { t: "【G Batch】", h: "/categories/413907?isSubCate=true" },
+    { t: "【OG Batch】", h: "/categories/474018?isSubCate=true" },
+    { t: "【CS Batch】", h: "/categories/413913?isSubCate=true" },
+    { t: "【BC Batch】", h: "/categories/413910?isSubCate=true" },
+    { t: "【Z Batch】", h: "/categories/413914?isSubCate=true" },
+    { t: "【AS Batch】", h: "/categories/435237?isSubCate=true" },
+    { t: "【AY Batch】", h: "/categories/444210?isSubCate=true" },
+    { t: "【PK Batch】", h: "/categories/533261?isSubCate=true" },
+    { t: "【LT Batch】", h: "/categories/684978?isSubCate=true" }
+  ]},
+  { name: "NIKE ZOOM", links: [
+    { t: "【X Batch】Alphafly 3", h: "/categories/560943?isSubCate=true" },
+    { t: "【GC Batch】Vaporfly Next 4%", h: "/categories/608314?isSubCate=true" },
+    { t: "【GT Batch】Vaporfly Next% 2", h: "/categories/463091?isSubCate=true" },
+    { t: "【GT Batch】VaporFly Next% 3", h: "/categories/453986?isSubCate=true" },
+    { t: "【GT Batch】Alphafly NEXT% 3", h: "/categories/463095?isSubCate=true" },
+    { t: "【XE Batch】Vomero V18", h: "/categories/556107?isSubCate=true" },
+    { t: "【GK Batch】ZOOMX FK 3", h: "/categories/465050?isSubCate=true" },
+    { t: "【I8 Batch】Pegasus Premium", h: "/categories/599067?isSubCate=true" },
+    { t: "【YH Batch】Pegasus Premium", h: "/categories/614182?isSubCate=true" },
+    { t: "【PE Batch】Vomero V18", h: "/categories/639727?isSubCate=true" },
+    { t: "【X Batch】Zoom Vaporfly 4", h: "/categories/649986?isSubCate=true" },
+    { t: "【MOK Batch】Vomero 5", h: "/categories/654199?isSubCate=true" },
+    { t: "【XE Batch】Pegasus Plus", h: "/categories/659378?isSubCate=true" },
+    { t: "【XE Batch】Zoom Fly 6 PRM", h: "/categories/667696?isSubCate=true" },
+    { t: "【GT Batch】Vomero Plus", h: "/categories/735276?isSubCate=true" }
+  ]},
+  { name: "Air Max 90/95/97/TN", links: [
+    { t: "【MX Batch】Max 90", h: "/categories/550519?isSubCate=true" },
+    { t: "【PB/MAX Batch】Max 90", h: "/categories/687294?isSubCate=true" },
+    { t: "【ZD Batch】Max 90", h: "/categories/725392?isSubCate=true" },
+    { t: "【GX Batch】Max 95", h: "/categories/550515?isSubCate=true" },
+    { t: "【EM Batch】Max 95", h: "/categories/622798?isSubCate=true" },
+    { t: "【KZ2.0 Batch】Max 95", h: "/categories/661531?isSubCate=true" },
+    { t: "【MX Batch】Max 95", h: "/categories/550514?isSubCate=true" },
+    { t: "【HS Batch】Max 97", h: "/categories/550531?isSubCate=true" },
+    { t: "【TX Batch】TN", h: "/categories/550512?isSubCate=true" },
+    { t: "【WM Batch】TN Plus 3.0", h: "/categories/550513?isSubCate=true" },
+    { t: "【PB/MAX Batch】TN Plus", h: "/categories/622980?isSubCate=true" }
+  ]},
+  { name: "Air Max Others", links: [
+    { t: "【HS Batch】TL 2.5", h: "/categories/497935?isSubCate=true" },
+    { t: "【PE Batch】NOCTA Hot Step 2", h: "/categories/506064?isSubCate=true" },
+    { t: "【OWF Batch】Max 1", h: "/categories/725405?isSubCate=true" },
+    { t: "【YH Batch】Vapormax 360", h: "/categories/735697?isSubCate=true" }
+  ]},
+  { name: "Nike P-6000", links: [
+    { t: "【CS Batch】", h: "/categories/463117?isSubCate=true" },
+    { t: "【GK Batch】", h: "/categories/463119?isSubCate=true" },
+    { t: "【WM Batch】", h: "/categories/463120?isSubCate=true" },
+    { t: "【PE Batch】", h: "/categories/609109?isSubCate=true" }
+  ]},
+  { name: "G.T Cut", links: [
+    { t: "【MAX Batch】", h: "/categories/413969?isSubCate=true" },
+    { t: "【OX Batch】", h: "/categories/639655?isSubCate=true" },
+    { t: "【Best Batch】G.T.4", h: "/categories/726310?isSubCate=true" }
+  ]},
+  { name: "Kobe 5/8", links: [
+    { t: "【MAX Batch】Kobe 5", h: "/categories/413972?isSubCate=true" },
+    { t: "【S2 Batch】Kobe 5", h: "/categories/413973?isSubCate=true" },
+    { t: "【OG Batch】Kobe 5", h: "/categories/471868?isSubCate=true" },
+    { t: "【STAR Batch】Kobe 5", h: "/categories/620788?isSubCate=true" },
+    { t: "【MAX Batch】Kobe 8", h: "/categories/413976?isSubCate=true" },
+    { t: "【S2 Batch】Kobe 8", h: "/categories/413977?isSubCate=true" },
+    { t: "【GX Batch】Kobe 8", h: "/categories/455898?isSubCate=true" }
+  ]},
+  { name: "Nike Ja 3", links: [
+    { t: "【MAX Batch】", h: "/categories/735217?isSubCate=true" },
+    { t: "【GX Batch】", h: "/categories/735280?isSubCate=true" }
+  ]},
+  { name: "Nike Sabrina 2.0", links: [{ t: "【MAX Batch】", h: "/categories/613484?isSubCate=true" }] },
+  { name: "Nike Shox Ride 2", links: [{ t: "【WM Batch】", h: "/categories/544811?isSubCate=true" }] },
+  { name: "Yeezy 700", links: [
+    { t: "【OG Batch】V1/V2", h: "/categories/438312?isSubCate=true" },
+    { t: "【LW Batch】V1/V2/V3", h: "/categories/438313?isSubCate=true" },
+    { t: "【S2 Batch】V1/V2/V3", h: "/categories/438314?isSubCate=true" },
+    { t: "【FC Batch】V1/V2/V3", h: "/categories/438316?isSubCate=true" }
+  ]},
+  { name: "Yeezy 500", links: [
+    { t: "【OG Batch】", h: "/categories/436038?isSubCate=true" },
+    { t: "【LW Batch】", h: "/categories/436039?isSubCate=true" },
+    { t: "【S2 Batch】", h: "/categories/436040?isSubCate=true" },
+    { t: "【FC Batch】", h: "/categories/436041?isSubCate=true" },
+    { t: "【GC Batch】", h: "/categories/436042?isSubCate=true" }
+  ]},
+  { name: "Yeezy Foam Runner", links: [
+    { t: "【LW Batch】", h: "/categories/435649?isSubCate=true" },
+    { t: "【FC Batch】", h: "/categories/435686?isSubCate=true" }
+  ]},
+  { name: "New Balance 9060", links: [
+    { t: "【M Batch】", h: "/categories/413946?isSubCate=true" },
+    { t: "【AY Batch】", h: "/categories/464855?isSubCate=true" },
+    { t: "【C Batch】", h: "/categories/558819?isSubCate=true" }
+  ]},
+  { name: "New Balance 2002", links: [
+    { t: "【M Batch】", h: "/categories/413947?isSubCate=true" },
+    { t: "【ZC Batch】", h: "/categories/435931?isSubCate=true" },
+    { t: "【MOK Batch】", h: "/categories/678436?isSubCate=true" }
+  ]},
+  { name: "New Balance 2000", links: [
+    { t: "【TOP Batch】", h: "/categories/585282?isSubCate=true" },
+    { t: "【TG Batch】", h: "/categories/629627?isSubCate=true" },
+    { t: "【C Batch】", h: "/categories/647060?isSubCate=true" }
+  ]},
+  { name: "New Balance 990/991/992", links: [
+    { t: "【ZC Batch】990V3", h: "/categories/435949?isSubCate=true" },
+    { t: "【ZC Batch】990V6", h: "/categories/435946?isSubCate=true" },
+    { t: "【ZC Batch】991", h: "/categories/435948?isSubCate=true" },
+    { t: "【ZC Batch】991v2", h: "/categories/435950?isSubCate=true" },
+    { t: "【ZC Batch】992", h: "/categories/435965?isSubCate=true" },
+    { t: "【M Batch】992", h: "/categories/435966?isSubCate=true" }
+  ]},
+  { name: "New Balance 1906/1000/740/471", links: [
+    { t: "【M Batch】1906", h: "/categories/413950?isSubCate=true" },
+    { t: "【DT Batch】1906", h: "/categories/471295?isSubCate=true" },
+    { t: "【REAL DT Batch】1906", h: "/categories/497544?isSubCate=true" },
+    { t: "【GK Batch】1906", h: "/categories/524367?isSubCate=true" },
+    { t: "【X3 Batch】1000", h: "/categories/462555?isSubCate=true" },
+    { t: "【DT Batch】1000", h: "/categories/464067?isSubCate=true" },
+    { t: "【DT Batch】740", h: "/categories/553970?isSubCate=true" },
+    { t: "【M Batch】471", h: "/categories/554444?isSubCate=true" },
+    { t: "【DT Batch】471", h: "/categories/579564?isSubCate=true" }
+  ]},
+  { name: "New Balance FuelCell Rebel V4", links: [{ t: "【Z Batch】", h: "/categories/513486?isSubCate=true" }] },
+  { name: "Adidas Campus/Samba/Gazelle", links: [
+    { t: "【GOAT Batch】00S Campus", h: "/categories/436382?isSubCate=true" },
+    { t: "【HL Batch】00S Campus", h: "/categories/436381?isSubCate=true" },
+    { t: "Bad Bunny x Gazelle", h: "/categories/435872?isSubCate=true" },
+    { t: "Bad Bunny x Campus Light", h: "/categories/436074?isSubCate=true" },
+    { t: "Bad Bunny x Back to School", h: "/categories/436383?isSubCate=true" },
+    { t: "【WM Batch】Bad Bunny Forum Low", h: "/categories/745318?isSubCate=true" }
+  ]},
+  { name: "Adidas ADI2000/Superstar", links: [
+    { t: "【XY Batch】ADI2000", h: "/categories/504338?isSubCate=true" },
+    { t: "【DT Batch】Superstar", h: "/categories/413934?isSubCate=true" }
+  ]},
+  { name: "Adidas Adizero Running", links: [
+    { t: "【BS Batch】Boston 11", h: "/categories/473781?isSubCate=true" },
+    { t: "【BS Batch】Boston 12", h: "/categories/473782?isSubCate=true" },
+    { t: "【BS Batch】Adios Pro 3", h: "/categories/473784?isSubCate=true" },
+    { t: "【BS Batch】Adizero Pro 4", h: "/categories/513855?isSubCate=true" },
+    { t: "【BS Batch】Evo SL", h: "/categories/518843?isSubCate=true" },
+    { t: "【BS Batch】Adios Pro Evo 1", h: "/categories/518844?isSubCate=true" },
+    { t: "【PK Batch】Evo SL", h: "/categories/573551?isSubCate=true" },
+    { t: "【T Batch】Aruku", h: "/categories/515698?isSubCate=true" },
+    { t: "【YH Batch】Prime X 3.0 Strung", h: "/categories/756151?isSubCate=true" }
+  ]},
+  { name: "Asics", links: [
+    { t: "【TM Batch】Gel-Kayano 14", h: "/categories/475869?isSubCate=true" },
+    { t: "【ZC Batch】Gel-Kayano 14", h: "/categories/475871?isSubCate=true" },
+    { t: "【ZX Batch】Gel-Kayano 14", h: "/categories/475872?isSubCate=true" },
+    { t: "【PK Batch】Gel-Kayano 14", h: "/categories/484022?isSubCate=true" },
+    { t: "【PB Batch】Gel-Kayano 14", h: "/categories/504391?isSubCate=true" },
+    { t: "【TM Batch】GEL-Kayano31", h: "/categories/537551?isSubCate=true" },
+    { t: "【TG Batch】NOVABLAST 4", h: "/categories/537555?isSubCate=true" },
+    { t: "【PE Batch】Gel-NYC", h: "/categories/537613?isSubCate=true" },
+    { t: "【ZC Batch】Gel-NYC", h: "/categories/643905?isSubCate=true" },
+    { t: "【EG Batch】Gel-1130", h: "/categories/711838?isSubCate=true" },
+    { t: "【SK Batch】Gel-NYC", h: "/categories/738590?isSubCate=true" }
+  ]},
+  { name: "ON Cloud", links: [
+    { t: "【GX Batch】ON", h: "/categories/509494?isSubCate=true" },
+    { t: "【M Batch】ON x Loewe Cloudtilt 2.0", h: "/categories/691096?isSubCate=true" },
+    { t: "【PE Batch】Cloudtilt", h: "/categories/556791?isSubCate=true" },
+    { t: "【PE Batch】Cloudswift", h: "/categories/570768?isSubCate=true" },
+    { t: "【PE Batch】Cloud x 4", h: "/categories/579778?isSubCate=true" },
+    { t: "【PE Batch】Cloud x 6", h: "/categories/629957?isSubCate=true" },
+    { t: "【PE Batch】ON x Loewe Cloudtilt 2.0", h: "/categories/645917?isSubCate=true" }
+  ]},
+  { name: "Salomon", links: [
+    { t: "【TOP Batch】", h: "/categories/413943?isSubCate=true" },
+    { t: "【GX Batch】", h: "/categories/413944?isSubCate=true" },
+    { t: "【M Batch】", h: "/categories/413945?isSubCate=true" },
+    { t: "【PK4.0 Batch】", h: "/categories/475395?isSubCate=true" }
+  ]},
+  { name: "Puma Speedcat", links: [
+    { t: "【ZG Batch】", h: "/categories/666479?isSubCate=true" },
+    { t: "【CS Batch】", h: "/categories/666875?isSubCate=true" },
+    { t: "【GK Batch】Rose x Puma", h: "/categories/675491?isSubCate=true" },
+    { t: "【YH Batch】Rose x Puma", h: "/categories/683021?isSubCate=true" },
+    { t: "【T Batch】Rose x Puma", h: "/categories/687284?isSubCate=true" },
+    { t: "【CS Batch】Rose x Puma", h: "/categories/690440?isSubCate=true" }
+  ]},
+  { name: "Sacai", links: [
+    { t: "【M Batch】Sacai 3.0", h: "/categories/436399?isSubCate=true" },
+    { t: "【LJ Batch】Sacai 3.0", h: "/categories/436400?isSubCate=true" },
+    { t: "【GOD Batch】Sacai 3.0", h: "/categories/436408?isSubCate=true" }
+  ]},
+  { name: "Balenciaga", links: [
+    { t: "【TM Batch】Taekwondo", h: "/categories/726732?isSubCate=true" },
+    { t: "【XA Batch】Basketball", h: "/categories/726733?isSubCate=true" },
+    { t: "【OK Batch】Track 3.0", h: "/categories/726734?isSubCate=true" },
+    { t: "【ZC Batch】3XL", h: "/categories/726736?isSubCate=true" },
+    { t: "【OK Batch】3XL", h: "/categories/726737?isSubCate=true" },
+    { t: "【XA Batch】3XL", h: "/categories/726738?isSubCate=true" },
+    { t: "【X Dr Batch】3XL", h: "/categories/726739?isSubCate=true" },
+    { t: "【DG Batch】SKIWEAR", h: "/categories/726852?isSubCate=true" }
+  ]},
+  { name: "LV TRAINER", links: [
+    { t: "【YW Batch】Trainer", h: "/categories/413958?isSubCate=true" },
+    { t: "【AM Batch】Trainer", h: "/categories/460686?isSubCate=true" },
+    { t: "【NEW A+】LV Skate", h: "/categories/462599?isSubCate=true" },
+    { t: "【LT Batch】Trainer", h: "/categories/471248?isSubCate=true" },
+    { t: "【CJ Batch】LV Trainer", h: "/categories/587878?isSubCate=true" },
+    { t: "【NEW CJ Batch】LV Trainer", h: "/categories/600502?isSubCate=true" }
+  ]},
+  { name: "OFF WHITE", links: [
+    { t: "【S Batch】Arrow Shoes", h: "/categories/452114?isSubCate=true" },
+    { t: "【S Batch】Running", h: "/categories/498398?isSubCate=true" },
+    { t: "【S Batch】Canvas", h: "/categories/668322?isSubCate=true" }
+  ]},
+  { name: "Rick Owens", links: [
+    { t: "【OG Batch】", h: "/categories/614252?isSubCate=true" },
+    { t: "【GD Batch】", h: "/categories/675983?isSubCate=true" }
+  ]},
+  { name: "Lanvin Curb", links: [
+    { t: "【GZ Batch】", h: "/categories/675870?isSubCate=true" },
+    { t: "【X1 Batch】", h: "/categories/677445?isSubCate=true" }
+  ]},
+  { name: "DIO*R B27", links: [{ t: "【YH Batch】B27", h: "/categories/753326?isSubCate=true" }] },
+  { name: "Mizuno", links: [
+    { t: "【PD Batch】Speed 2K", h: "/categories/515356?isSubCate=true" },
+    { t: "Pure Origin Astro Plus", h: "/categories/526969?isSubCate=true" }
+  ]},
+  { name: "Saucony", links: [
+    { t: "【PE Batch】PROGRID OMNI 9", h: "/categories/756148?isSubCate=true" },
+    { t: "【GZ Batch】PROGRID OMNI 9", h: "/categories/756550?isSubCate=true" }
+  ]},
+  { name: "Onitsuka Tiger", links: [
+    { t: "【PH Batch】MEXICO 66", h: "/categories/413929?isSubCate=true" },
+    { t: "【TOP Batch】MEXICO 66", h: "/categories/666873?isSubCate=true" }
+  ]},
+  { name: "Bape STA", links: [
+    { t: "【WD Batch】", h: "/categories/413959?isSubCate=true" },
+    { t: "【C Batch】", h: "/categories/463080?isSubCate=true" }
+  ]},
+  { name: "Converse", links: [{ t: "【YH Batch】1970S", h: "/categories/633492?isSubCate=true" }] },
+  { name: "Vans", links: [{ t: "Vans Bread shoes", h: "/categories/436384?isSubCate=true" }] },
+  { name: "Birkenstock", links: [
+    { t: "FOG X Birkenstock", h: "/categories/413961?isSubCate=true" },
+    { t: "【DC Batch】", h: "/categories/512490?isSubCate=true" }
+  ]},
+  { name: "Crocs", links: [
+    { t: "Salehe Bembury x Crocs", h: "/categories/413960?isSubCate=true" },
+    { t: "【莞产 Batch】Bape x Crocs", h: "/categories/605843?isSubCate=true" },
+    { t: "【莞产 Batch】Cars x Crocs", h: "/categories/607074?isSubCate=true" }
+  ]},
+  { name: "Timberland", links: [{ t: "【ZS Batch】", h: "/categories/508226?isSubCate=true" }] },
+  { name: "UltraBoost", links: [{ t: "【WM Batch】UB", h: "/categories/413962?isSubCate=true" }] },
+  { name: "Alo Yoga", links: [
+    { t: "【LW Batch】Runner", h: "/categories/639701?isSubCate=true" },
+    { t: "【M Batch】Recovery Mode", h: "/categories/643878?isSubCate=true" }
+  ]},
+  { name: "Ambassador13", links: [{ t: "【MAX Batch】", h: "/categories/413968?isSubCate=true" }] },
+  { name: "ARCTERYX Jackets", links: [
+    { t: "【LX Batch】Beta LT", h: "/categories/462676?isSubCate=true" },
+    { t: "【LX Batch】Alpha SV 6", h: "/categories/462677?isSubCate=true" },
+    { t: "【LX Batch】Alpha SV 7", h: "/categories/462678?isSubCate=true" }
+  ]},
+  { name: "The North Face 1996", links: [
+    { t: "【HR Batch】1996", h: "/categories/460378?isSubCate=true" },
+    { t: "【LX Batch】1996", h: "/categories/460389?isSubCate=true" }
+  ]},
+  { name: "RAF SIMONS Cylon-21", links: [{ t: "【WM Batch】", h: "/categories/745720?isSubCate=true" }] },
+  { name: "Slippers", links: [
+    { t: "FOG x AD Originals", h: "/categories/585309?isSubCate=true" },
+    { t: "【LW Batch】KB Slippers", h: "/categories/592239?isSubCate=true" },
+    { t: "【LW Batch】ReactX Rejuven8", h: "/categories/593703?isSubCate=true" },
+    { t: "【G Batch】React x Rejuven8", h: "/categories/607727?isSubCate=true" },
+    { t: "【HZ Batch】Hermes", h: "/categories/619928?isSubCate=true" },
+    { t: "【PK Batch】Lululemon", h: "/categories/633388?isSubCate=true" },
+    { t: "【A+ Batch】LV", h: "/categories/753337?isSubCate=true" }
+  ]},
+  { name: "Special", links: [
+    { t: "JMDY-SALE", h: "/categories/4653922" },
+    { t: "JMDY-Taobao-Store", h: "/categories/4618960" },
+    { t: "Exclusive/B products", h: "/categories/4019751" },
+    { t: "Fake VS Fake", h: "/categories/4224113" },
+    { t: "Real VS Fake", h: "/categories/4159579" },
+    { t: "American warehouse spot", h: "/categories/687633?isSubCate=true" },
+    { t: "GOAT factory", h: "/categories/4668779" },
+    { t: "McQueen", h: "/categories/4668711" },
+    { t: "Clothes Sale", h: "/categories/4682498" },
+    { t: "ADILETTE 22", h: "/categories/4713014" },
+    { t: "MAX Batch Kyrie 5/6/7/8", h: "/categories/4187997" },
+    { t: "New Balance 550", h: "/categories/4653914" }
+  ]}
+];
+
+function render() {
+  const container = document.getElementById('cats');
+  container.innerHTML = data.map((cat, i) => `
+    <div class="cat-card bg-dark-800 rounded-xl border border-dark-600 overflow-hidden" data-name="${cat.name.toLowerCase()}">
+      <button class="cat-hdr w-full px-5 py-4 flex items-center justify-between hover:bg-dark-700 transition-colors" onclick="toggle(${i})">
+        <span class="font-medium text-white">${cat.name}</span>
+        <svg class="chev chev-${i} open h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="cat-content cnt-${i} open px-5 pb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-2">
+          ${cat.links.map(l => `<a href="${BASE_URL}${l.h}" target="_blank" class="block py-2 px-3 rounded-lg hover:bg-dark-600 text-gray-400 hover:text-blue-400 transition-all text-sm truncate">${l.t}</a>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(i) {
+  document.querySelector(`.cnt-${i}`).classList.toggle('open');
+  document.querySelector(`.chev-${i}`).classList.toggle('open');
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.cat-card').forEach(card => {
+    card.style.display = card.dataset.name.includes(q) ? 'block' : 'none';
+  });
+});
+
+render();
+</script>
+</body>
+</html>

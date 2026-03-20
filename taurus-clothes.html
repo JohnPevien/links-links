@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taurus Clothes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0b', 800: '#121214', 700: '#1a1a1d', 600: '#232328', 500: '#2d2d33' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .cat-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .cat-content.open { max-height: 5000px; transition: max-height 0.5s ease-in; }
+    .chev { transition: transform 0.3s ease; }
+    .chev.open { transform: rotate(180deg); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #121214; }
+    ::-webkit-scrollbar-thumb { background: #2d2d33; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-200 min-h-screen">
+  <header class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-semibold text-white tracking-tight">Taurus Clothes</h1>
+        <a href="jmdy.html" class="text-sm px-3 py-1.5 rounded-lg bg-dark-700 hover:bg-dark-600 text-gray-300 hover:text-white transition-all">JMDY →</a>
+      </div>
+      <div class="relative">
+        <input type="text" id="search" placeholder="Search brands..." class="bg-dark-700 border border-dark-500 rounded-lg px-4 py-2 pl-10 w-64 text-sm focus:outline-none focus:border-blue-500 transition-all">
+        <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 py-8"><div class="grid gap-3" id="cats"></div></main>
+
+<script>
+const BASE_URL = "";
+const data = [
+  { name: "🔥 Hot & Special", links: [
+    { t: "BRAND 品牌", h: "/categories/4632473" },
+    { t: "🔥🔥HOT SELLING ITEMS", h: "/categories/4970116" },
+    { t: "🔥🔥🔥🔥", h: "/categories/4577382" },
+    { t: "🔥SALE", h: "/categories/4655209" }
+  ]},
+  { name: "A", links: [
+    { t: "AXO", h: "/categories/5024838" },
+    { t: "AMG", h: "/categories/4576834" },
+    { t: "AAPE", h: "/categories/4658974" },
+    { t: "ALYX", h: "/categories/4640728" },
+    { t: "AMI", h: "/categories/4571837" },
+    { t: "AMIRI", h: "/categories/4578563" },
+    { t: "AEPE", h: "/categories/5016223" },
+    { t: "ANTA", h: "/categories/4868638" },
+    { t: "AXXV", h: "/categories/4867695" },
+    { t: "ADADA", h: "/categories/5015324" },
+    { t: "ADIDAS", h: "/categories/4639846" },
+    { t: "ALWAYS", h: "/categories/4770191" },
+    { t: "AKIMBO", h: "/categories/5042394" },
+    { t: "ASKYURSELF", h: "/categories/4689676" },
+    { t: "ACNE STUDIOS", h: "/categories/4645865" },
+    { t: "ALEXSHOCKP", h: "/categories/4791780" },
+    { t: "ARCTERYX", h: "/categories/4571166" },
+    { t: "AIR JORDAN 乔丹", h: "/categories/4578567" },
+    { t: "ABOUT BLANK", h: "/categories/4877133" },
+    { t: "ABERCROMBIE&FITCH", h: "/categories/4642485" },
+    { t: "ANN DEMEULEMEESTER", h: "/categories/5004207" },
+    { t: "ALEXANDER MCQUEEN", h: "/categories/4709424" },
+    { t: "ARODESSANDRO", h: "/categories/4808657" },
+    { t: "AIME LEON DORE", h: "/categories/4742916" },
+    { t: "ARMANI EXCHANGE", h: "/categories/4742109" },
+    { t: "ANTI SOCIAL SOCIAL CLUB", h: "/categories/4656039" },
+    { t: "ALEXANDER WANG", h: "/categories/4640752" },
+    { t: "ARIZONA SUPER PUFF", h: "/categories/5047600" }
+  ]},
+  { name: "B", links: [
+    { t: "BOY", h: "/categories/4957403" },
+    { t: "BAPE", h: "/categories/4578590" },
+    { t: "BALLY", h: "/categories/4642554" },
+    { t: "BEAMS", h: "/categories/4902785" },
+    { t: "BALMAIN", h: "/categories/4634541" },
+    { t: "BABYLON", h: "/categories/4683371" },
+    { t: "BARBOUR", h: "/categories/4910979" },
+    { t: "BURBERRY", h: "/categories/4628814" },
+    { t: "BIEREFDIKK", h: "/categories/4874715" },
+    { t: "BRAIN DEAD", h: "/categories/5044646" },
+    { t: "BROKEN PLANET", h: "/categories/4590668" },
+    { t: "BOTTEGA VENETA", h: "/categories/4611132" },
+    { t: "BROOKS BROTHERS", h: "/categories/4625165" },
+    { t: "BALENCIAGA", h: "/categories/4568347" },
+    { t: "BOON X RAFFER", h: "/categories/4892903" },
+    { t: "BRUNELLO CUCINELLI", h: "/categories/4962878" }
+  ]},
+  { name: "C", links: [
+    { t: "CP", h: "/categories/4571442" },
+    { t: "CDG", h: "/categories/4640727" },
+    { t: "CPFM", h: "/categories/4693068" },
+    { t: "CRUZ", h: "/categories/4962189" },
+    { t: "CHLOE", h: "/categories/4851344" },
+    { t: "CROCS", h: "/categories/4646744" },
+    { t: "COACH", h: "/categories/4611135" },
+    { t: "CHANEL", h: "/categories/4949334" },
+    { t: "CARSICKO", h: "/categories/4803636" },
+    { t: "CELINE", h: "/categories/4625869" },
+    { t: "CHOOOSELF", h: "/categories/4628559" },
+    { t: "COTTWEILER", h: "/categories/4910988" },
+    { t: "COLE BUXTON", h: "/categories/4703460" },
+    { t: "CARHARTT", h: "/categories/5093290" },
+    { t: "COGGNAT", h: "/categories/4877211" },
+    { t: "CORTEIZ 恶魔岛", h: "/categories/4572053" },
+    { t: "COUGH SYRUP", h: "/categories/5003113" },
+    { t: "CHAMPION", h: "/categories/4649877" },
+    { t: "COLUMBIA", h: "/categories/4888173" },
+    { t: "CALVIN KLEIN", h: "/categories/4612588" },
+    { t: "CHROME HEARTS", h: "/categories/4577008" },
+    { t: "CASABLANCA 卡萨布兰卡", h: "/categories/4590777" },
+    { t: "CANADA GOOSE", h: "/categories/4642560" }
+  ]},
+  { name: "D", links: [
+    { t: "DGK", h: "/categories/4666547" },
+    { t: "DIESEL", h: "/categories/4612578" },
+    { t: "DREW", h: "/categories/4686001" },
+    { t: "GCDS", h: "/categories/5094474" },
+    { t: "DIOR", h: "/categories/4571454" },
+    { t: "DENHAM", h: "/categories/4693043" },
+    { t: "DICKIES", h: "/categories/4649881" },
+    { t: "DENIM TEARS", h: "/categories/4655220" },
+    { t: "DESSERTO", h: "/categories/4612589" },
+    { t: "DERSCHUTZE", h: "/categories/4984243" },
+    { t: "DRMARTAL", h: "/categories/4867689" },
+    { t: "DSQUARED2", h: "/categories/4862450" },
+    { t: "DESCENDANT", h: "/categories/4795636" },
+    { t: "DOLCE GABBANA", h: "/categories/4603184" }
+  ]},
+  { name: "E", links: [
+    { t: "EMIS", h: "/categories/4638683" },
+    { t: "EVISU", h: "/categories/4658975" },
+    { t: "EPODE", h: "/categories/4827078" },
+    { t: "EASTPAK", h: "/categories/4700779" },
+    { t: "ERIC EMANUEL", h: "/categories/4599225" },
+    { t: "ERMENEGILDO ZEGNA", h: "/categories/4645061" },
+    { t: "EMPORIO ARMANI", h: "/categories/4590327" },
+    { t: "ENFANTS RICHES DEPRIMES", h: "/categories/4691960" }
+  ]},
+  { name: "F", links: [
+    { t: "FR2", h: "/categories/4675952" },
+    { t: "FOG", h: "/categories/4572100" },
+    { t: "FILA", h: "/categories/4649873" },
+    { t: "FENDI", h: "/categories/4598616" },
+    { t: "FRED PERRY", h: "/categories/4571157" },
+    { t: "FAR ARCHIVE", h: "/categories/4665605" },
+    { t: "FJALLRAVEN", h: "/categories/5088016" },
+    { t: "FOURNESS", h: "/categories/4725073" },
+    { t: "FRAGMENT DESIGN", h: "/categories/4609632" },
+    { t: "FALSE PERCEPTION", h: "/categories/4934054" }
+  ]},
+  { name: "G", links: [
+    { t: "GAP", h: "/categories/4772646" },
+    { t: "GANT", h: "/categories/4678745" },
+    { t: "GOOD", h: "/categories/4868538" },
+    { t: "GRAILZ", h: "/categories/4697155" },
+    { t: "GANNI", h: "/categories/4679235" },
+    { t: "GUCCI", h: "/categories/4632329" },
+    { t: "GOYARD", h: "/categories/5025410" },
+    { t: "GALLERY DEPT", h: "/categories/4578564" },
+    { t: "GOOSEYED", h: "/categories/4781963" },
+    { t: "GRAMICCI", h: "/categories/4781986" },
+    { t: "GOODWIN", h: "/categories/4829268" },
+    { t: "GIVENCHY", h: "/categories/4797209" },
+    { t: "GIORGIO ARMANI", h: "/categories/4814069" },
+    { t: "GOD SELECTION XXX", h: "/categories/4671979" }
+  ]},
+  { name: "H", links: [
+    { t: "HUF", h: "/categories/4681293" },
+    { t: "HELLSTAR", h: "/categories/4631551" },
+    { t: "HAVENS", h: "/categories/4611141" },
+    { t: "HERMES", h: "/categories/4618908" },
+    { t: "HUMAN MADE", h: "/categories/4571161" },
+    { t: "HELLY HANSEN", h: "/categories/4611125" },
+    { t: "HUGO BOSS", h: "/categories/4571163" },
+    { t: "HOLLISTER", h: "/categories/5088711" }
+  ]},
+  { name: "I-J", links: [
+    { t: "IH NOM UH NIT", h: "/categories/4579214" },
+    { t: "ICECREAM", h: "/categories/4747103" },
+    { t: "JOPLIN", h: "/categories/4854417" },
+    { t: "JIL SANDER", h: "/categories/4614666" },
+    { t: "JACQUEMUS", h: "/categories/4983867" },
+    { t: "JACOB COHEN", h: "/categories/4905571" },
+    { t: "JACK WOLFSKIN", h: "/categories/5032170" }
+  ]},
+  { name: "K", links: [
+    { t: "KITH", h: "/categories/4620653" },
+    { t: "KANGOL", h: "/categories/4716225" },
+    { t: "KAWS", h: "/categories/4611160" },
+    { t: "KOURI", h: "/categories/5053639" },
+    { t: "KROWN", h: "/categories/5004602" },
+    { t: "KARLOS", h: "/categories/4706131" },
+    { t: "KOLOR", h: "/categories/4771174" },
+    { t: "KITHERIM", h: "/categories/5007413" },
+    { t: "KAPITAL", h: "/categories/4914883" },
+    { t: "KAPITAL", h: "/categories/4940779" },
+    { t: "KARL LAGERFELD", h: "/categories/4639357" },
+    { t: "KLATTERMUSEN", h: "/categories/4873742" },
+    { t: "KAIRON SPORT", h: "/categories/4718460" },
+    { t: "KENT&CURWEN", h: "/categories/4984831" }
+  ]},
+  { name: "L", links: [
+    { t: "LV", h: "/categories/4625872" },
+    { t: "LEE", h: "/categories/4659677" },
+    { t: "LEVIS", h: "/categories/4888193" },
+    { t: "LACOSTE", h: "/categories/4571155" },
+    { t: "LOEWE", h: "/categories/4888194" },
+    { t: "L.L.BEAN", h: "/categories/4797160" },
+    { t: "LULULEMON", h: "/categories/4642552" },
+    { t: "LIFE WORK", h: "/categories/4733775" },
+    { t: "LOSTHEADS", h: "/categories/4989999" },
+    { t: "LORO PIANA", h: "/categories/4919591" },
+    { t: "LOSTIN TRINITY", h: "/categories/5051397" }
+  ]},
+  { name: "M", links: [
+    { t: "MLB", h: "/categories/4590324" },
+    { t: "MCM", h: "/categories/5097231" },
+    { t: "MARIN", h: "/categories/4915561" },
+    { t: "MAMMUT", h: "/categories/4643421" },
+    { t: "MONTBELL", h: "/categories/4692490" },
+    { t: "MARTIA", h: "/categories/4968937" },
+    { t: "MCDONALD", h: "/categories/4609617" },
+    { t: "MONALOLA", h: "/categories/5086391" },
+    { t: "MIU MIU", h: "/categories/4633037" },
+    { t: "MASTERMIND", h: "/categories/4609626" },
+    { t: "MAHARAJA", h: "/categories/4823497" },
+    { t: "MONCLER", h: "/categories/4571156" },
+    { t: "MOSCHINO", h: "/categories/4756284" },
+    { t: "MAISON MARGIELA", h: "/categories/4634017" },
+    { t: "MARTINE ROSE", h: "/categories/4936228" },
+    { t: "MASSIMO DUTTI", h: "/categories/5011407" },
+    { t: "MAISON KITSUNE", h: "/categories/4915580" },
+    { t: "MISSED EMOTION", h: "/categories/4990001" },
+    { t: "MARNI MERCERE", h: "/categories/4820586" },
+    { t: "MOOSE KNUCKLES", h: "/categories/4608641" }
+  ]},
+  { name: "N", links: [
+    { t: "NOAH", h: "/categories/4620652" },
+    { t: "NIKE", h: "/categories/4565034" },
+    { t: "NOCTA", h: "/categories/4887944" },
+    { t: "NAUTICA", h: "/categories/4638760" },
+    { t: "NEW ERA", h: "/categories/5040445" },
+    { t: "NANAMICA", h: "/categories/5052326" },
+    { t: "NEEDLES", h: "/categories/4953955" },
+    { t: "NEIGHBORHOOD", h: "/categories/4634403" },
+    { t: "NEW BALANCE", h: "/categories/4652172" },
+    { t: "N.HOLLYWOOD", h: "/categories/4797919" }
+  ]},
+  { name: "O", links: [
+    { t: "032C", h: "/categories/4719073" },
+    { t: "ON", h: "/categories/4610060" },
+    { t: "OAKLEY", h: "/categories/4633812" },
+    { t: "OSPREY", h: "/categories/4834944" },
+    { t: "OPEN YY", h: "/categories/5011376" },
+    { t: "OFF-WHITE", h: "/categories/4605941" }
+  ]},
+  { name: "P", links: [
+    { t: "PUMA", h: "/categories/4613599" },
+    { t: "PURPLE", h: "/categories/4663331" },
+    { t: "PLAYBOY", h: "/categories/4713234" },
+    { t: "PERRY", h: "/categories/4827076" },
+    { t: "PRADA", h: "/categories/4568344" },
+    { t: "PRPS NIOR", h: "/categories/4702908" },
+    { t: "PLEASURES", h: "/categories/4674348" },
+    { t: "PATAGONIA", h: "/categories/4598092" },
+    { t: "PALACE", h: "/categories/4846524" },
+    { t: "PAUL&SHARK", h: "/categories/4639336" },
+    { t: "PALM ANGELS", h: "/categories/4570073" },
+    { t: "PSYCHO BUNNY", h: "/categories/4709421" },
+    { t: "RICK OWENS", h: "/categories/4916310" },
+    { t: "PROTOCOL INDEX", h: "/categories/5099361" },
+    { t: "PHILIPP PLEIN", h: "/categories/4756270" }
+  ]},
+  { name: "R", links: [
+    { t: "RHUDE", h: "/categories/4598170" },
+    { t: "REVENGE", h: "/categories/4703464" },
+    { t: "RRR123", h: "/categories/4718447" },
+    { t: "REPRESENT", h: "/categories/4598081" },
+    { t: "RINGPLAY", h: "/categories/5050005" },
+    { t: "RALPH LAUREN", h: "/categories/5009559" }
+  ]},
+  { name: "S", links: [
+    { t: "SACAI", h: "/categories/4681746" },
+    { t: "STUSSY", h: "/categories/4563382" },
+    { t: "SP5DER", h: "/categories/4571227" },
+    { t: "SONY", h: "/categories/4722704" },
+    { t: "SEASON 6", h: "/categories/4794911" },
+    { t: "SKYARK", h: "/categories/5050016" },
+    { t: "SUPREME", h: "/categories/4600568" },
+    { t: "SAINT TEARS", h: "/categories/4665604" },
+    { t: "SAINT MICHAEL", h: "/categories/4666581" },
+    { t: "SNOW PEAK", h: "/categories/4910991" },
+    { t: "STONE ISLAND", h: "/categories/4998519" },
+    { t: "WEST COAST CHOPPERS", h: "/categories/4719758" },
+    { t: "SAINT VANITY", h: "/categories/4732982" },
+    { t: "SAINT LAURENT", h: "/categories/4684563" }
+  ]},
+  { name: "T", links: [
+    { t: "TNF", h: "/categories/4967215" },
+    { t: "TOBI", h: "/categories/4893911" },
+    { t: "TOTEME", h: "/categories/4712566" },
+    { t: "THRASHER", h: "/categories/4678719" },
+    { t: "TOM FORD", h: "/categories/4710873" },
+    { t: "THUG CLUB", h: "/categories/4697113" },
+    { t: "TRAPSTAR", h: "/categories/5091034" },
+    { t: "TRAVIS SCOTT", h: "/categories/4610020" },
+    { t: "TEAM WANG", h: "/categories/4984247" },
+    { t: "THOM BROWNE", h: "/categories/4645056" },
+    { t: "TOPSTONEY", h: "/categories/4894077" },
+    { t: "TIMBERLAND", h: "/categories/4877232" },
+    { t: "THE HIGHER", h: "/categories/4657721" }
+  ]},
+  { name: "U", links: [
+    { t: "UGG", h: "/categories/5016218" },
+    { t: "UMBRO", h: "/categories/4797156" },
+    { t: "UNDEFEATED", h: "/categories/4622314" },
+    { t: "UNDERMYCAR", h: "/categories/4697128" },
+    { t: "UNKNOWN", h: "/categories/4867697" },
+    { t: "UNDER ARMOUR", h: "/categories/4797293" }
+  ]},
+  { name: "V", links: [
+    { t: "VLONE", h: "/categories/4646700" },
+    { t: "VINTAGE", h: "/categories/4620645" },
+    { t: "VANNE", h: "/categories/4856689" },
+    { t: "VALLEY", h: "/categories/4885544" },
+    { t: "VALENTINO", h: "/categories/4635449" },
+    { t: "VETEMENTS", h: "/categories/4694798" },
+    { t: "VERSACE", h: "/categories/4634015" },
+    { t: "VIVIENNE WESTWOOD", h: "/categories/4652175" }
+  ]},
+  { name: "W-X-Y-Z", links: [
+    { t: "WTAPS", h: "/categories/4748317" },
+    { t: "WE11 DONE", h: "/categories/4742119" },
+    { t: "WARREN LOTAS", h: "/categories/4648782" },
+    { t: "XHIBITIC", h: "/categories/4814038" },
+    { t: "Y-3", h: "/categories/4655146" },
+    { t: "YEEZY", h: "/categories/4646748" },
+    { t: "Y/PROJECT", h: "/categories/4844693" },
+    { t: "YOHJI YAMAMOTO", h: "/categories/5049994" },
+    { t: "ZARA", h: "/categories/4948658" },
+    { t: "61M", h: "/categories/4973870" },
+    { t: "2000 ARCHIVE", h: "/categories/4751939" }
+  ]},
+  { name: "Clothing Categories", links: [
+    { t: "BAG 包", h: "/categories/4597907" },
+    { t: "POLO", h: "/categories/4571177" },
+    { t: "HAT 帽子", h: "/categories/4572224" },
+    { t: "BELT 皮带", h: "/categories/4747797" },
+    { t: "GLOVE 手套", h: "/categories/4987049" },
+    { t: "SHAWL 披肩", h: "/categories/5048569" },
+    { t: "EARMUFF 耳罩", h: "/categories/5048934" },
+    { t: "VEST 背心", h: "/categories/4572095" },
+    { t: "SHIRT 衬衫", h: "/categories/4598169" },
+    { t: "SCARF 围巾", h: "/categories/4613296" },
+    { t: "CHILD 童装", h: "/categories/4623694" },
+    { t: "SOCKS 袜子", h: "/categories/4590319" },
+    { t: "T-SHIRT T恤", h: "/categories/4563387" },
+    { t: "HOODIE 卫衣", h: "/categories/4565036" },
+    { t: "SHORTS 短裤", h: "/categories/4564738" },
+    { t: "JACKET 夹克", h: "/categories/4567070" },
+    { t: "FASHION 时尚", h: "/categories/4691948" },
+    { t: "SWEATER 毛衣", h: "/categories/4568332" },
+    { t: "SLIPPERS 拖鞋", h: "/categories/4646742" },
+    { t: "FOOTBALL 足球", h: "/categories/4622303" },
+    { t: "TROUSERS 长裤", h: "/categories/4564755" },
+    { t: "HEADGEAR 头套", h: "/categories/4577753" },
+    { t: "UMBRELLA 雨伞", h: "/categories/4937955" },
+    { t: "JACKET 夹克冲锋衣", h: "/categories/4615133" },
+    { t: "UNDERWEAR 内裤", h: "/categories/4604105" },
+    { t: "FEMALE STYLE 女孩", h: "/categories/4650505" },
+    { t: "SHORT SKIRT 短裙", h: "/categories/4684000" },
+    { t: "LONG SKIRT 长裙", h: "/categories/4830781" },
+    { t: "LONG SLEEVED 长袖", h: "/categories/4565899" },
+    { t: "THERMALS 保暖内衣", h: "/categories/4694053" },
+    { t: "TRENCH COAT 风衣外套", h: "/categories/4827162" },
+    { t: "NBA BASKETBALL 篮球", h: "/categories/4622306" },
+    { t: "COTTON CLOTHES 棉服", h: "/categories/4607519" },
+    { t: "DOWN JACKETS 羽绒服", h: "/categories/4615901" },
+    { t: "FLEECE JACKET 摇粒绒衣", h: "/categories/4690282" },
+    { t: "SUNSCREEN CLOTHING 防晒衣", h: "/categories/4638751" },
+    { t: "COTTON-PADDED TROUSERS 棉裤", h: "/categories/4716244" }
+  ]},
+  { name: "Other", links: [
+    { t: "临时隐藏", h: "/categories/4625888" },
+    { t: "隐藏相册", h: "/categories/4602731" },
+    { t: "Uncategorized album", h: "/categories/0" }
+  ]}
+];
+
+function render() {
+  const container = document.getElementById('cats');
+  container.innerHTML = data.map((cat, i) => `
+    <div class="cat-card bg-dark-800 rounded-xl border border-dark-600 overflow-hidden" data-name="${cat.name.toLowerCase()}">
+      <button class="cat-hdr w-full px-5 py-4 flex items-center justify-between hover:bg-dark-700 transition-colors" onclick="toggle(${i})">
+        <span class="font-medium text-white">${cat.name}</span>
+        <svg class="chev chev-${i} open h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="cat-content cnt-${i} open px-5 pb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 pt-2">
+          ${cat.links.map(l => `<a href="${BASE_URL}${l.h}" target="_blank" class="block py-2 px-3 rounded-lg hover:bg-dark-600 text-gray-400 hover:text-blue-400 transition-all text-sm truncate">${l.t}</a>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(i) {
+  document.querySelector(`.cnt-${i}`).classList.toggle('open');
+  document.querySelector(`.chev-${i}`).classList.toggle('open');
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.cat-card').forEach(card => {
+    const hasMatch = card.dataset.name.includes(q) || 
+      Array.from(card.querySelectorAll('a')).some(a => a.textContent.toLowerCase().includes(q));
+    card.style.display = hasMatch ? 'block' : 'none';
+  });
+});
+
+render();
+</script>
+</body>
+</html>
